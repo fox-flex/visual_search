@@ -1,8 +1,24 @@
 # Visual search
 
-## Aproach
+#### Table of Contents
 
-### Pipeline of the approach
+- [Implementation details](#Implementation-details) 
+    - [Pipeline overview](#Pipeline-overview)
+    - [Models overview](#Models-overview)
+    - [Ideas for improvement](#Ideas-for-improvement)
+- [Get started](#Get-started)
+    - [Env stat](#Env-stat)
+    - [Setup env](#Setup-env)
+    - [Download data](#Download-data)
+    - [Preprocess dataset](#Preprocess-dataset)
+    - [Start UI](#Start-UI)
+- [Used repos](#Used-repos)
+
+
+
+## Implementation details {#Implementation-details}
+
+### Pipeline overview {#Pipeline-overview}
 
 - Convert data into format of roxford5k dataset: `gen_dataset.py`. Learn more in the original [repo](https://github.com/filipradenovic/revisitop).
 - Use model for image retrieval for image search.
@@ -19,49 +35,52 @@
 
 - In proposed solution, we have option to choose one of 2 image search models. Inference was performed on dataset of 8000 imgs.
     - Model choosen by [paperswithcode image-retrieval](https://paperswithcode.com/task/image-retrieval).
-    - [superglobal](https://github.com/shihaoshao-gh/superglobal)
-        - Uses one global descriptor for whole images.
-        - Image candidates are found by simple cosine similarity. Afterwards reranking is performed.
- ![superglobal_reranking](./imgs/superglobal_reranking.png)
-        - Not scale invariant. Building queries in different scales may improve the performance.
-        - For more details check the original [paper](https://arxiv.org/pdf/2308.06954).
-        - Inference time
-            - **~18m** generating dataset descriptors
-            - does not depend on number of cropped ROIs
-            - **8.1s** (for 6 ROI crops)
-        - Preprocessed dataset size: 93M
+
+### Models overview {#Models-overview}
+
+- [superglobal](https://github.com/shihaoshao-gh/superglobal)
+    - Inference time
+        - **~18m** generating dataset descriptors
+        - does not depend on number of cropped ROIs
+        - **8.1s** (for 6 ROI crops)
+    - Preprocessed dataset size: 93M
+    - Uses one global descriptor for whole images.
+    - Image candidates are found by simple cosine similarity. Afterwards reranking is performed.
+    ![superglobal_reranking](./imgs/superglobal_reranking.png)
+    - Not scale invariant. Building queries in different scales may improve the performance.
+    - For more details check the original [paper](https://arxiv.org/pdf/2308.06954).
     
-    - [ames](https://github.com/pavelsuma/ames)
- -There are 2 versions of this model: CVNet and DinoV2 based. I choose CVNet as it is lighter, despite the lack of resources.
-        - Uses k~[30-600] local descriptors per image. ![ames_local_features](./imgs/ames_local_features.png)
-        - The similarity between images is computed via trainable transformer block. In the original work, they use top k=~100 best matches by global similarity superglobal like. In this approach, we calculate the similarity to the whole dataset, which is the reason for such a long inference time.
- ![ames_similarity](./imgs/ames_similarity.png)
-        - For more details check the original [paper](https://arxiv.org/pdf/2408.03282v1).
 
-        - Inference time
-            - **~20m** generating dataset descriptors
-            - depend on number of cropped ROIs
-            - **325.1s** (for 6 ROI crops)
-            - ~51s for 1 crop without loading the model
-        - Preprocessed dataset size: **22G**
+- [ames](https://github.com/pavelsuma/ames)
+    - Inference time
+        - **~20m** generating dataset descriptors
+        - depend on number of cropped ROIs
+        - **325.1s** (for 6 ROI crops)
+        - ~51s for 1 crop without loading the model
+    - Preprocessed dataset size: **22G**
+
+    -There are 2 versions of this model: CVNet and DinoV2 based. I choose CVNet as it is lighter, despite the lack of resources.
+    - Uses k~[30-600] local descriptors per image. ![ames_local_features](./imgs/ames_local_features.png)
+    - The similarity between images is computed via trainable transformer block. In the original work, they use top k=~100 best matches by global similarity superglobal like. In this approach, we calculate the similarity to the whole dataset, which is the reason for such a long inference time.
+    ![ames_similarity](./imgs/ames_similarity.png)
+    - For more details check the original [paper](https://arxiv.org/pdf/2408.03282v1).
 
 
-### Ideas for improvement
+### Ideas for improvement {#Ideas-for-improvement}
 
 - Chosen models were trained to detect the same building (large objects) on 2 images, where the main object is almost on the whole image, which is not our case.
 - Define, what we want to find and use it as a prompt for detector. This will improve the performance of ROI detector. If we want our model to search for example clothes, we can add this word to default prompts to our ROI detector.
 - We have relatively small dataset (8k images). If we would have more data, the brute-force approach of searching similar images may be too expencive. In this way, we can use other techniques to find similar descriptors. Like k-d trees, or another smart search approach like [faiss](https://github.com/facebookresearch/faiss)
 - Time measurements are with loading of models for inference. If we would store the model in the memory whole time the inference time will be lower.
 
-## Get started
+## Get started {#Get-started}
 
-### Env
+### Env stat {#Env-stat}
 - Ubuntu 20.04.4
 - CUDA Version: 12.1
-- NVIDIA GeForce RTX 2080 Ti (12GB VRAM)
 - python 3.11
 
-### Env setup
+### Setup env {#Setup-env}
 ```{bash}
 conda create --name=visserch python=3.11.5
 conda activate visserch
@@ -70,7 +89,7 @@ pip install -r requirements.txt
 pip install git+https://github.com/IDEA-Research/Grounding-DINO-1.5-API.git
 ```
 
-### Download data
+### Download data {#Download-data}
 
 ```{bash}
 pip install gdown
@@ -92,7 +111,7 @@ cd -
 ```
 
 
-### Preprocess dataset
+### Preprocess dataset {# Preprocess-dataset}
 ```{bash}
 python gen_dataset.py \
     --in_data_path "data/test_data/" \
@@ -103,14 +122,14 @@ python gen_dataset.py \
 ```
 
 
-### Start UI
+### Start UI {#Start-UI}
 ```{bash}
 streamlit run app.py --\
     --dataset_name "ds" \
     --gdino_tocken_path 'keys/gdino_tocken.txt'
 ```
 
-## Used repose
+## Used repos {#Used-repos}
 
 - [superglobal](https://github.com/shihaoshao-gh/superglobal)
 - [ames](https://github.com/pavelsuma/ames)
