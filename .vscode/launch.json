@@ -1,0 +1,72 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: ames/eval",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "src/evaluate.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/ames",
+            "args": [
+                "--multirun",
+                "desc_name=cvnet",
+                "data_root=../data/datasets",
+                "resume=./chpt/r101_cvnet_ames.pt",
+                "model.binarized=False",
+                "dataset@test_dataset_db=ds_s",
+                "dataset@test_dataset_q=query",
+                "test_dataset.query_sequence_len=600",
+                "test_dataset.sequence_len=50",
+                "test_dataset.batch_size=1",
+                "test_dataset.lamb=[0.55]",
+                "test_dataset.temp=[0.3]",
+                "test_dataset.num_rerank=[100]"
+            ],
+            "env": {"PYTHONPATH": "${workspaceFolder}/ames${pathSeparator}${env:PYTHONPATH}"}
+        },
+        {
+            "name": "Python Debugger: ames/extract_descriptors",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "extract/extract_descriptors.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/ames",
+            "args": [
+                "--dataset", "ds", 
+                "--split", "_gallery", // "_gallery", "_query"
+                // "--dataset", "query", 
+                // "--split", "_query", // "_gallery", "_query"
+                "--backbone", "cvnet",
+                "--weight", "chpt/CVPR2022_CVNet_R50.pyth",
+                "--save_path", "../data/datasets",
+                "--data_path", "../data/datasets",
+                "--desc_type", "local",
+                "--detector", "chpt/cvnet_detector.pt"
+            ],
+            "env": {"PYTHONPATH": "${workspaceFolder}/ames${pathSeparator}${env:PYTHONPATH}"}
+        },
+        {
+            "name": "Python Debugger: superglobal/test",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/superglobal",
+            "program": "test.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "IMGS_PER_QUERY", "5",
+                "MODEL.DEPTH", "50",
+                "TEST.WEIGHTS", "./weights/CVPR2022_CVNet_R50.pyth",
+                "TEST.DATA_DIR", "../data/datasets", //"../revisitop/data/datasets",
+                "TEST.DATASET_LIST", "[[\"ds\", \"query\"]]"
+            ],
+        }
+        
+    ]
+}
