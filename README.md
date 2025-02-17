@@ -15,10 +15,13 @@
 - [Used repos](#Used-repos)
 
 
+<a name="Implementation-details"/>
 
-## Implementation details {#Implementation-details}
+## Implementation details
 
-### Pipeline overview {#Pipeline-overview}
+<a name="Pipeline-overview"/>
+
+### Pipeline overview
 
 - Convert data into format of roxford5k dataset: `gen_dataset.py`. Learn more in the original [repo](https://github.com/filipradenovic/revisitop).
 - Use model for image retrieval for image search.
@@ -36,7 +39,9 @@
 - In proposed solution, we have option to choose one of 2 image search models. Inference was performed on dataset of 8000 imgs.
     - Model choosen by [paperswithcode image-retrieval](https://paperswithcode.com/task/image-retrieval).
 
-### Models overview {#Models-overview}
+<a name="Models-overview"/>
+
+### Models overview
 
 - [superglobal](https://github.com/shihaoshao-gh/superglobal)
     - Inference time
@@ -66,21 +71,31 @@
     - For more details check the original [paper](https://arxiv.org/pdf/2408.03282v1).
 
 
-### Ideas for improvement {#Ideas-for-improvement}
+<a name="Ideas-for-improvement"/>
+
+### Ideas for improvement
 
 - Chosen models were trained to detect the same building (large objects) on 2 images, where the main object is almost on the whole image, which is not our case.
 - Define, what we want to find and use it as a prompt for detector. This will improve the performance of ROI detector. If we want our model to search for example clothes, we can add this word to default prompts to our ROI detector.
 - We have relatively small dataset (8k images). If we would have more data, the brute-force approach of searching similar images may be too expencive. In this way, we can use other techniques to find similar descriptors. Like k-d trees, or another smart search approach like [faiss](https://github.com/facebookresearch/faiss)
 - Time measurements are with loading of models for inference. If we would store the model in the memory whole time the inference time will be lower.
 
-## Get started {#Get-started}
+---
 
-### Env stat {#Env-stat}
+<a name="Get-started"/>
+
+## Get started
+
+<a name="Env-stat"/>
+
+### Env stat
 - Ubuntu 20.04.4
 - CUDA Version: 12.1
 - python 3.11
 
-### Setup env {#Setup-env}
+<a name="Setup-env"/>
+
+### Setup env
 ```{bash}
 conda create --name=visserch python=3.11.5
 conda activate visserch
@@ -89,7 +104,9 @@ pip install -r requirements.txt
 pip install git+https://github.com/IDEA-Research/Grounding-DINO-1.5-API.git
 ```
 
-### Download data {#Download-data}
+<a name="Download-data"/>
+
+### Download data
 
 ```{bash}
 pip install gdown
@@ -111,7 +128,9 @@ cd -
 ```
 
 
-### Preprocess dataset {# Preprocess-dataset}
+<a name="Preprocess-dataset"/>
+
+### Preprocess dataset
 ```{bash}
 python gen_dataset.py \
     --in_data_path "data/test_data/" \
@@ -122,14 +141,19 @@ python gen_dataset.py \
 ```
 
 
-### Start UI {#Start-UI}
+<a name="Start-UI"/>
+
+### Start UI
 ```{bash}
 streamlit run app.py --\
     --dataset_name "ds" \
     --gdino_tocken_path 'keys/gdino_tocken.txt'
 ```
 
-## Used repos {#Used-repos}
+
+<a name="Used-repos"/>
+
+## Used repos
 
 - [superglobal](https://github.com/shihaoshao-gh/superglobal)
 - [ames](https://github.com/pavelsuma/ames)
