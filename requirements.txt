@@ -6,3 +6,4 @@ opencv-python-headless==4.10.0.84
 yacs== 0.1.8
 scikit-learn==1.6.1
 streamlit==1.42.0
+humanize==4.12.0

@@ -4,12 +4,6 @@ import argparse
 
 from tqdm.auto import tqdm
 from PIL import Image, ImageDraw
-import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
-
-import torch
-import torchvision.transforms as transforms
-from torchvision.models import resnet50, ResNet50_Weights
 
 import streamlit as st
 
@@ -41,8 +35,8 @@ def main():
 
     uploaded_file = st.file_uploader("Choose an image", type=["jpg", "png", "jpeg"])
     if uploaded_file is not None:
-
         query_image = Image.open(uploaded_file)
+        query_image = query_image.convert('RGB')  # Convert to RGB mode
         st.image(query_image, caption="Uploaded Image", use_container_width=True)
         tmp_img_path = f'./data/q.jpg'
         query_image.save(tmp_img_path)

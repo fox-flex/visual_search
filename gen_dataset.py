@@ -129,6 +129,10 @@ def get_args():
     parser.add_argument('--gen_ames',
                         action='store_true',
                         help='Gen ames descriptors.')
+    parser.add_argument('--rm_old',
+                        action='store_true',
+                        help='Remove old dataset.')
+    
     args = parser.parse_args()
     return args
     
@@ -140,7 +144,10 @@ if __name__ == '__main__':
     dataset_name = args.dataset_name
     
     datasets_dir = Path(dataset_dir)
+    dataset_dir_tmp = datasets_dir / dataset_name
+    if args.rm_old and dataset_dir_tmp.exists():
+        shutil.rmtree(str(dataset_dir_tmp))
     GenDataset.gen_dataset(in_data_path, datasets_dir, dataset_name,
-                          gen_superglobal=False,
+                          gen_superglobal=args.gen_superglobal,
                           gen_ames=args.gen_ames)
 

@@ -106,7 +106,7 @@ git clone --recurse-submodules -j3 https://github.com/fox-flex/visual_search
 
 ### Setup env
 ```{bash}
-conda create --name=visserch python=3.11.5
+conda create --name=visserch python=3.11.5 -y
 conda activate visserch
 pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements.txt
@@ -139,15 +139,30 @@ cd -
 
 <a name="Preprocess-dataset"/>
 
-### Preprocess dataset
+### Preprocess dataset [optional]
+
+If not performed before setup, the preprocessing will start on first inference.
+
 ```{bash}
 python gen_dataset.py \
     --in_data_path "data/test_data/" \
-    --dataset_name "name" \
+    --dataset_name "ds_s" \
     --dataset_dir "data/datasets/" \
     --gen_superglobal \
-    --gen_ames
+    --gen_ames \
+    --rm_old
 ```
+
+<a name="Add-GroundingDINO-API-key"/>
+
+### Add GroundingDINO API key [optional]
+
+If you would not add API key, the pipeline will pass full image without ROI cropping as query.
+
+To setup API key:
+- Go to [GroundingDINO-API](https://cloud.deepdataspace.com/) website. Register and kreate API-token.
+- Place the token into file in `keys` directory.
+- When starting UI, pass path to you API key file to the script.
 
 
 <a name="Start-UI"/>
