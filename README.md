@@ -8,6 +8,7 @@
     - [Ideas for improvement](#Ideas-for-improvement)
 - [Get started](#Get-started)
     - [Env stat](#Env-stat)
+    - [Clone repo](#Clone-repo)
     - [Setup env](#Setup-env)
     - [Download data](#Download-data)
     - [Preprocess dataset](#Preprocess-dataset)
@@ -92,6 +93,14 @@
 - Ubuntu 20.04.4
 - CUDA Version: 12.1
 - python 3.11
+
+<a name="Clone-repo"/>
+
+### Clone repo
+
+```{bash}
+git clone --recurse-submodules -j3 https://github.com/fox-flex/visual_search
+```
 
 <a name="Setup-env"/>
 

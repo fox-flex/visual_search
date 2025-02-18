@@ -1,6 +1,6 @@
 [submodule "superglobal"]
 	path = superglobal
-	url = git@github.com:fox-flex/superglobal.git
+	url = https://github.com/fox-flex/superglobal/
 [submodule "ames"]
 	path = ames
 	url = https://github.com/fox-flex/ames
